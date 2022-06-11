@@ -21,7 +21,7 @@ public class Account {
         this.userId = userId;
     }
 
-    public Balance getBalance() {
+    public Balance getBalance(AuthenticatedUser currentUser) {
         return balance;
     }
 
