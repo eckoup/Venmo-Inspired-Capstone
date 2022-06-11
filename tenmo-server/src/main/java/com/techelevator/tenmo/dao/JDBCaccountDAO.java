@@ -23,9 +23,9 @@ public class JDBCaccountDAO {
 
 
         @Override
-        public Balance getBalance(String user) {
-            String sql = "SELECT balance FROM accounts JOIN users ON accounts.user_id = users.user_id WHERE username = ?";
-            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, user);
+        public Balance getBalance(int userId) {
+            String sql = "select balance from account where user_id = ?";
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
             Balance balance = new Balance();
 
             if (results.next()) {

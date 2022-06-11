@@ -14,15 +14,14 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class UserController {
 
-    @Autowired
+
     AccountDAO accountDAO;
-    @Autowired
+
     UserDao userDao;
 
-    @RequestMapping(path = "/balance", method = RequestMethod.GET)
-    public Balance getBalance(Principal principal) {
-        System.out.println(principal.getName());
-        return accountDAO.getBalance(principal.getName());
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    public Balance get(@PathVariable int id) {
+        return accountDAO.getBalance(id);
     }
 
     @RequestMapping(path="/users", method = RequestMethod.GET)

@@ -6,6 +6,7 @@ import com.techelevator.tenmo.model.Balance;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+//import com.techelevator.tenmo.services.RestAccountService;
 
 public class App {
 
@@ -25,6 +26,8 @@ public class App {
     public App(ConsoleService console, AuthenticationService authenticationService) {
         this.console = console;
         this.authenticationService = authenticationService;
+//        this.accountService = new RestAccountService(API_BASE_URL);
+
     }
 
     private void run() {
@@ -94,10 +97,14 @@ public class App {
 
     //completed getBalance method
 	private void viewCurrentBalance() {
-        Balance balance = accountService.getBalance(currentUser);
-        System.out.println("Your current account balance is:  $" + balance.getBalance());
-	}
 
+        try {
+            Balance balance = accountService.getBalance(currentUser);
+            System.out.println("Your current account balance is:  $" + balance.getBalance());
+        } catch (NullPointerException e) {
+            System.out.println("We can't find your money! My bad!");
+        }
+    }
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
 		
