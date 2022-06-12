@@ -19,9 +19,10 @@ public class UserController {
 
     UserDao userDao;
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public Balance get(@PathVariable int id) {
-        return accountDAO.getBalance(id);
+    @RequestMapping(path = "/balance", method = RequestMethod.GET)
+    public Balance getBalance(User user) {
+        System.out.println(user.getUsername());
+        return accountDAO.getBalance(user.getId());
     }
 
     @RequestMapping(path="/users", method = RequestMethod.GET)

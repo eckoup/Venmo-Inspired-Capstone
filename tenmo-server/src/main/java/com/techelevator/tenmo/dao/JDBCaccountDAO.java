@@ -23,7 +23,7 @@ public class JDBCaccountDAO {
 
 
         @Override
-        public Balance getBalance(int userId) {
+        public Balance getBalance(Long userId) {
             String sql = "select balance from account where user_id = ?";
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
             Balance balance = new Balance();

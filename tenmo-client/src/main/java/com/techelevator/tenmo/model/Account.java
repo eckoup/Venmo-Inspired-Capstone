@@ -1,15 +1,21 @@
 package com.techelevator.tenmo.model;
 
+import java.math.BigDecimal;
+
 public class Account {
-    private int accountId;
+    private Long accountId;
     private int userId;
     private Balance balance;
 
-    public int getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
+// need to add a constructor here that initializes balance object
+    public Account (Balance balance){
+        this.balance = balance;
+    }
 
-    public void setAccountId(int accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
