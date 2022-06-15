@@ -88,4 +88,17 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
+    public void printTransfers(Long id, String from, String to, String type, String status, BigDecimal amount) {
+
+        System.out.println("-------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("-------------------------------");
+        System.out.println("Id: " + id);
+        System.out.println("From: " + from);
+        System.out.println("To: " + to);
+        System.out.println("Type: " + type);
+        System.out.println("Status: " + status);
+        System.out.println("Amount: $" + amount);
+
+    }
 }
