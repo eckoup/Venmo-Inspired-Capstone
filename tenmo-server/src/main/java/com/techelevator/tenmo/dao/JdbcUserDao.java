@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JdbcUserDao implements UserDao {
+public class JdbcUserDao implements UserDAO {
 
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
     private JdbcTemplate jdbcTemplate;
@@ -79,6 +79,11 @@ public class JdbcUserDao implements UserDao {
         }
 
         return true;
+    }
+
+    @Override
+    public User getUserByUserId(int id) {
+        return null;
     }
 
     private User mapRowToUser(SqlRowSet rs) {
