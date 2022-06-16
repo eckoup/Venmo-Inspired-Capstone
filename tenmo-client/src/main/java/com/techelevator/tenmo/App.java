@@ -1,12 +1,9 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Balance;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
-import com.techelevator.tenmo.services.RestAccountService;
+import com.techelevator.tenmo.services.RestTransferService;
 
 import java.math.BigDecimal;
 
@@ -20,6 +17,8 @@ public class App {
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private Account accountService;
+    private RestTransferService transferService;
+
 
 
     public static void main(String[] args) {
@@ -104,17 +103,47 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+        Transfer[] transfer = transferService.getAllTransfers(currentUser, currentUser.getUser().getId());
+        System.out.println("Your transfer history is as follows: " );
+
+        Long currentUserAccountId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
+        for(Transfer transfers: transfer) {
+            printTransferStubDetails(currentUser, transfers);
+        }
+//        int transferIdChoice = console.getUserInputInteger("\nPlease enter transfer ID to view details (0 to cancel)");
+//        Transfer transferChoice = validateTransferIdChoice(transferIdChoice, transfers, currentUser);
+//        if(transferChoice != null) {
+//            printTransferDetails(currentUser, transferChoice);
+//        }
+
+
 	}
 
-	private void viewPendingRequests() {
+    private void printTransferStubDetails(AuthenticatedUser currentUser, Transfer transfer) {
+        String fromOrTo = "";
+        Long accountFrom = transfer.getAccountFrom();
+        Long accountTo = transfer.getAccountTo();
+        if (accountService.getAccountByUserId(currentUser, accountTo).getUserId() == currentUser.getUser().getId()) {
+            Long accountFromUserId = accountService.getAccountByUserId(currentUser, accountFrom).getUserId();
+            Long userFromName = accountService.getAccountByUserId(currentUser, accountFromUserId).getUserId();
+            fromOrTo = "From: " + userFromName;
+        } else {
+            long accountToUserId = accountService.getAccountByUserId(currentUser, accountTo).getUserId();
+            Long userToName = accountService.getAccountByUserId(currentUser, accountToUserId).getUserId();
+            fromOrTo = "To: " + userToName;
+        }
+
+        console.printTransfers(transfer.getTransferId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getTransferTypeId(),  transfer.getAmount());
+    }
+
+
+    private void viewPendingRequests() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
+     //Todo
 		
 	}
 

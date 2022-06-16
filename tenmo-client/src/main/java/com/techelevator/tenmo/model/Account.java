@@ -1,16 +1,14 @@
 package com.techelevator.tenmo.model;
 
-import java.math.BigDecimal;
-
 public class Account {
     private Long accountId;
-    private int userId;
+    private Long userId;
     private Balance balance;
 
     public Long getAccountId() {
         return accountId;
     }
-// need to add a constructor here that initializes balance object
+
     public Account (Balance balance){
         this.balance = balance;
     }
@@ -19,11 +17,11 @@ public class Account {
         this.accountId = accountId;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -33,5 +31,8 @@ public class Account {
 
     public void setBalance(Balance balance) {
         this.balance = balance;
+    }
+
+    public Account getAccountByUserId(AuthenticatedUser currentUser, Long id) {
     }
 }
