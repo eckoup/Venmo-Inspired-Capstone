@@ -19,6 +19,8 @@ public class App {
     private Account accountService;
     private RestTransferService transferService;
 
+    private static int transferIdNumber;
+
 
     public static void main(String[] args) {
         App app = new App(new ConsoleService(), new AuthenticationService(API_BASE_URL));
@@ -176,7 +178,7 @@ public class App {
         }
 
     }
-
+//needs to be reformatted to long
     private void sendBucks() {
         Long users = accountService.getUserId(currentUser);
         printUserOptions(currentUser, users);
@@ -188,7 +190,7 @@ public class App {
         }
 
     }
-
+//needs to be reformatted to long
     private void requestBucks() {
         Long users = accountService.getUserId(currentUser);
         printUserOptions(currentUser, users);
@@ -233,17 +235,17 @@ public class App {
         }
         return false;
     }
-
+//resolved transfer service issue on app side -- still waiting on RestTransferService issues for confirmation
     private void approveOrReject(Transfer pendingTransfer, AuthenticatedUser authenticatedUser) {
         console.printApproveOrRejectOptions();
         long choice = console.getUserInputInteger("Please choose an option");
 
         if (choice != 0) {
             if (choice == 1) {
-                long transferStatusId = transferStatusService.getTransferStatus(currentUser, "Approved").getTransferStatusId();
+                long transferStatusId = transferService.getTransferFromTransferId(currentUser, Integer.parseInt("Approved")).getTransferStatusId();
                 pendingTransfer.setTransferStatusId(transferStatusId);
             } else if (choice == 2) {
-                long transferStatusId = transferStatusService.getTransferStatus(currentUser, "Rejected").getTransferStatusId();
+                long transferStatusId = transferService.getTransferFromTransferId(currentUser, Integer.parseInt("Rejected")).getTransferStatusId();
                 pendingTransfer.setTransferStatusId(transferStatusId);
             } else {
                 System.out.println("Invalid choice.");

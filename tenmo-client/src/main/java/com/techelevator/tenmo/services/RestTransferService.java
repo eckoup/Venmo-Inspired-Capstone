@@ -6,11 +6,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-public class RestTransferService implements TransferService{
+@Service
+public class RestTransferService {
 
     private String baseUrl;
     private RestTemplate restTemplate = new RestTemplate();
@@ -19,7 +21,7 @@ public class RestTransferService implements TransferService{
         this.baseUrl = url;
     }
 
-    @Override
+
     public void createTransfer(AuthenticatedUser authenticatedUser, Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -43,7 +45,7 @@ public class RestTransferService implements TransferService{
     }
 
 
-    @Override
+
     public Transfer[] getTransfersFromUserId(AuthenticatedUser authenticatedUser, int userId) {
         Transfer[] transfers = null;
         try {
@@ -60,7 +62,7 @@ public class RestTransferService implements TransferService{
         return transfers;
     }
 
-    @Override
+
     public Transfer getTransferFromTransferId(AuthenticatedUser authenticatedUser, int id) {
         Transfer transfer = null;
         try {
@@ -77,7 +79,7 @@ public class RestTransferService implements TransferService{
         return transfer;
     }
 
-    @Override
+
     public Transfer[] getAllTransfers(AuthenticatedUser authenticatedUser, Long id) {
         Transfer[] transfers = new Transfer[0];
 
