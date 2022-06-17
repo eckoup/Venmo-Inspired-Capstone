@@ -6,6 +6,9 @@ import com.techelevator.tenmo.model.TransferStatus;
 public interface TransferStatusService {
 
     TransferStatus getTransferStatus(AuthenticatedUser authenticatedUser, String description);
+    TransferStatus getTransferStatusById(AuthenticatedUser authenticatedUser, Long transferStatusId);
+
     TransferStatus getTransferStatusById(AuthenticatedUser authenticatedUser, int transferStatusId);
 
+    TransferStatus getTransferStatusById(AuthenticatedUser authenticatedUser, long transferStatusId);
 }

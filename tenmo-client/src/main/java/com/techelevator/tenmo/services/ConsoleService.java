@@ -1,14 +1,17 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class ConsoleService {
 
     private final Scanner scanner = new Scanner(System.in);
+    private final PrintWriter printWriter = new PrintWriter(System.out); //added printwriter
 
     public int promptForMenuSelection(String prompt) {
         int menuSelection;
@@ -88,17 +91,43 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public void printTransfers(Long id, String from, String to, String type, String status, BigDecimal amount) {
 
+    public void printTransfers(Long id, Long accountFrom, Long accountTo, BigDecimal amount) {
         System.out.println("-------------------------------");
         System.out.println("Transfer Details");
         System.out.println("-------------------------------");
         System.out.println("Id: " + id);
-        System.out.println("From: " + from);
-        System.out.println("To: " + to);
-        System.out.println("Type: " + type);
-        System.out.println("Status: " + status);
+        System.out.println("From: " + accountFrom);
+        System.out.println("To: " + accountTo);
         System.out.println("Amount: $" + amount);
 
+    }
+    public String getUserInput(String prompt) {
+        System.out.print(prompt+": ");
+        System.out.flush();
+        return scanner.nextLine();
+    }
+    public int getUserInputInteger(String prompt) {
+        Integer result = null;
+        do {
+            System.out.print(prompt + ": ");
+            System.out.flush();
+            String userInput = scanner.nextLine();
+            try {
+                result = Integer.parseInt(userInput);
+            } catch (NumberFormatException e) {
+                System.out.println(System.lineSeparator() + "*** " + userInput + " is not valid ***" + System.lineSeparator());
+            }
+        } while (result == null);
+        return result;
+    }
+
+    public void printApproveOrRejectOptions() {
+        System.out.println("1: Approve");
+        System.out.println("2: Reject");
+       System.out.println("0: Don't approve or reject\n");
+    }
+
+    public void printTransferDetails(Transfer[] transfer) {
     }
 }

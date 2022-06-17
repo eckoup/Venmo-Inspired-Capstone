@@ -32,14 +32,16 @@ public class RestTransferService implements TransferService{
             restTemplate.exchange(url, HttpMethod.POST, entity, Transfer.class);
         } catch(RestClientResponseException e) {
             if (e.getMessage().contains("You're broke, bud")) {
-                System.out.println("You don't have enough money for that transaction.");
+                System.out.println("You don't have enough money for that, try again after payday.");
             } else {
                 System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
             }
         } catch(ResourceAccessException e) {
             System.out.println("Could not complete request due to server network issue. Please try again.");
         }
+
     }
+
 
     @Override
     public Transfer[] getTransfersFromUserId(AuthenticatedUser authenticatedUser, int userId) {

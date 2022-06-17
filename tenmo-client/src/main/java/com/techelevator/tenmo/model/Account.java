@@ -5,7 +5,7 @@ public class Account {
     private Long userId;
     private Balance balance;
 
-    public Long getAccountId() {
+    public Long getAccountId(AuthenticatedUser currentUser, Long id) {
         return accountId;
     }
 
@@ -17,9 +17,7 @@ public class Account {
         this.accountId = accountId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
+    public Long getUserId(AuthenticatedUser currentUser) {return userId;}
 
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -33,6 +31,4 @@ public class Account {
         this.balance = balance;
     }
 
-    public Account getAccountByUserId(AuthenticatedUser currentUser, Long id) {
-    }
 }

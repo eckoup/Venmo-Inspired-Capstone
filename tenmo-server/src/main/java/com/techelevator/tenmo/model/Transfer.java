@@ -68,7 +68,4 @@ public class Transfer {
         this.amount = amount;
     }
 
-    public Transfer getAllTransfer(){return allTransfer;}
-
-
 }

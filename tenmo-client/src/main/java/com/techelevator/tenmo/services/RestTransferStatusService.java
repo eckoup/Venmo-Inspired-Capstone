@@ -2,7 +2,6 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.TransferStatus;
-import com.techelevator.tenmo.model.TransferType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -10,8 +9,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-public class RestTransferStatusService implements TransferStatusService{
-
+public abstract class RestTransferStatusService implements TransferStatusService{
+//should this be abstract??^^
     private final String baseUrl;
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -34,7 +33,7 @@ public class RestTransferStatusService implements TransferStatusService{
     }
 
     @Override
-    public TransferStatus getTransferStatusById(AuthenticatedUser authenticatedUser, int transferStatusId) {
+    public TransferStatus getTransferStatusById(AuthenticatedUser authenticatedUser, long transferStatusId) {
         TransferStatus transferStatus = null;
         try {
             String url = baseUrl + "/transferstatus/" + transferStatusId;
