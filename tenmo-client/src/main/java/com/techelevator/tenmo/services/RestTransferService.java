@@ -17,10 +17,11 @@ public class RestTransferService {
     private String baseUrl;
     private RestTemplate restTemplate = new RestTemplate();
 
+
+
     public RestTransferService(String url) {
         this.baseUrl = url;
     }
-
 
     public void createTransfer(AuthenticatedUser authenticatedUser, Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
@@ -33,7 +34,7 @@ public class RestTransferService {
         try {
             restTemplate.exchange(url, HttpMethod.POST, entity, Transfer.class);
         } catch(RestClientResponseException e) {
-            if (e.getMessage().contains("You're broke, bud")) {
+            if (e.getMessage().contains("You're broke, my friend!")) {
                 System.out.println("You don't have enough money for that, try again after payday.");
             } else {
                 System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
@@ -133,7 +134,7 @@ public class RestTransferService {
         try {
             restTemplate.exchange(url, HttpMethod.PUT, entity, Transfer.class);
         } catch(RestClientResponseException e) {
-            if (e.getMessage().contains("You're broke, bud")) {
+            if (e.getMessage().contains("You're broke, my friend!")) {
                 System.out.println("You don't have enough money for that transaction.");
             } else {
                 System.out.println("Could not complete request. Code: " + e.getRawStatusCode());

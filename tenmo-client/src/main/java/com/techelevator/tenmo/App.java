@@ -211,20 +211,20 @@ public class App {
         System.out.println(users);
     }
 
-    private boolean validateUserChoice(Long userIdChoice, String users, AuthenticatedUser currentUser) {
+    private boolean validateUserChoice(int userIdChoice, Long users, AuthenticatedUser currentUser) {
         if (userIdChoice != 0) {
             try {
                 boolean validUserIdChoice = false;
-//angry for each needs repair
-                for (User user : users) {
+
+//Repaired For-Each....I think?
+
                     if (userIdChoice == currentUser.getUser().getId()) {
                         throw new Exception("Invalid User Choice");
-                    }
-                    if (user.getId() == userIdChoice) {
+                    } else {
                         validUserIdChoice = true;
                         break;
                     }
-                }
+
                 if (validUserIdChoice == false) {
                     throw new Exception("test");
                 }
@@ -242,10 +242,10 @@ public class App {
 
         if (choice != 0) {
             if (choice == 1) {
-                long transferStatusId = transferService.getTransferFromTransferId(currentUser, Integer.parseInt("Approved")).getTransferStatusId();
+                long transferStatusId = transferService.getTransferFromTransferId(authenticatedUser, Integer.parseInt("Approved")).getTransferStatusId();
                 pendingTransfer.setTransferStatusId(transferStatusId);
             } else if (choice == 2) {
-                long transferStatusId = transferService.getTransferFromTransferId(currentUser, Integer.parseInt("Rejected")).getTransferStatusId();
+                long transferStatusId = transferService.getTransferFromTransferId(authenticatedUser, Integer.parseInt("Rejected")).getTransferStatusId();
                 pendingTransfer.setTransferStatusId(transferStatusId);
             } else {
                 System.out.println("Invalid choice.");
