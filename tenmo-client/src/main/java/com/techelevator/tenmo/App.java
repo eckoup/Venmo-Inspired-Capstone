@@ -1,258 +1,160 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.*;
+import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
+import com.techelevator.tenmo.services.AuthenticationServiceException;
+import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.tenmo.services.ConsoleService;
-import com.techelevator.tenmo.services.RestTransferService;
 
-import java.math.BigDecimal;
 
 public class App {
 
-    private static final String API_BASE_URL = "http://localhost:8080";
+    private static final String API_BASE_URL = "http://localhost:8080/";
 
-    private ConsoleService consoleService = new ConsoleService();
-    private AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private static final String MENU_OPTION_EXIT = "Exit";
+    private static final String LOGIN_MENU_OPTION_REGISTER = "Register";
+    private static final String LOGIN_MENU_OPTION_LOGIN = "Login";
+    private static final String[] LOGIN_MENU_OPTIONS = { LOGIN_MENU_OPTION_REGISTER, LOGIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
+    private static final String MAIN_MENU_OPTION_VIEW_BALANCE = "View your current balance";
+    private static final String MAIN_MENU_OPTION_SEND_BUCKS = "Send TE bucks";
+    private static final String MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS = "View your past transfers";
+    private static final String MAIN_MENU_OPTION_REQUEST_BUCKS = "Request TE bucks";
+    private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
+    private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
+    private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
 
     private AuthenticatedUser currentUser;
     private ConsoleService console;
-    private Account accountService;
-    private RestTransferService transferService;
-
-    private static int transferIdNumber;
-
+    private AuthenticationService authenticationService;
 
     public static void main(String[] args) {
-        App app = new App(new ConsoleService(), new AuthenticationService(API_BASE_URL));
+        App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
         app.run();
     }
 
     public App(ConsoleService console, AuthenticationService authenticationService) {
         this.console = console;
         this.authenticationService = authenticationService;
-        this.accountService = new Account(new Balance(new BigDecimal(1000.0)));
     }
 
-    private void run() {
-        consoleService.printGreeting();
-        loginMenu();
-        if (currentUser != null) {
-            mainMenu();
-        }
-    }
+    public void run() {
+        System.out.println("*********************");
+        System.out.println("* Welcome to TEnmo! *");
+        System.out.println("*********************");
 
-    private void loginMenu() {
-        int menuSelection = -1;
-        while (menuSelection != 0 && currentUser == null) {
-            consoleService.printLoginMenu();
-            menuSelection = consoleService.promptForMenuSelection("Please choose an option: ");
-            if (menuSelection == 1) {
-                handleRegister();
-            } else if (menuSelection == 2) {
-                handleLogin();
-            } else if (menuSelection != 0) {
-                System.out.println("Invalid Selection");
-                consoleService.pause();
-            }
-        }
-    }
-
-    private void handleRegister() {
-        System.out.println("Please register a new user account");
-        UserCredentials credentials = consoleService.promptForCredentials();
-        if (authenticationService.register(credentials)) {
-            System.out.println("Registration successful. You can now login.");
-        } else {
-            consoleService.printErrorMessage();
-        }
-    }
-
-    private void handleLogin() {
-        UserCredentials credentials = consoleService.promptForCredentials();
-        currentUser = authenticationService.login(credentials);
-        if (currentUser == null) {
-            consoleService.printErrorMessage();
-        }
+        registerAndLogin();
+        mainMenu();
     }
 
     private void mainMenu() {
-        int menuSelection = -1;
-        while (menuSelection != 0) {
-            consoleService.printMainMenu();
-            menuSelection = consoleService.promptForMenuSelection("Please choose an option: ");
-            if (menuSelection == 1) {
+        while(true) {
+            String choice = (String)console.getChoiceFromOptions(MAIN_MENU_OPTIONS);
+            if(MAIN_MENU_OPTION_VIEW_BALANCE.equals(choice)) {
                 viewCurrentBalance();
-            } else if (menuSelection == 2) {
+            } else if(MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals(choice)) {
                 viewTransferHistory();
-            } else if (menuSelection == 3) {
+            } else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
                 viewPendingRequests();
-            } else if (menuSelection == 4) {
+            } else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
                 sendBucks();
-            } else if (menuSelection == 5) {
+            } else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
                 requestBucks();
-            } else if (menuSelection == 0) {
-                continue;
+            } else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
+                login();
             } else {
-                System.out.println("Invalid Selection");
+                exitProgram();
             }
-            consoleService.pause();
         }
     }
 
     private void viewCurrentBalance() {
-        Balance balance = accountService.getBalance(currentUser);
-        System.out.println("Your current account balance is:  $" + balance.getBalance());
+        AccountService as = new AccountService(API_BASE_URL, currentUser);
+        try {
+            as.getBalance();
+        } catch (NullPointerException e) {
+            System.out.println("No balance found");
+        }
     }
 
     private void viewTransferHistory() {
-        Transfer[] transfer = transferService.getAllTransfers(currentUser, currentUser.getUser().getId());
-        System.out.println("Your transfer history is as follows: ");
-
-        Long currentUserAccountId = accountService.getAccountId(currentUser, currentUser.getUser().getId());
-        for (Transfer transfers : transfer) {
-            printTransferStubDetails(currentUser, transfers);
-        }
-        String transferIdChoice = console.getUserInput("\nPlease enter transfer ID to view details (0 to cancel)");
-        Transfer transferChoice = validateTransferIdChoice(Integer.parseInt(transferIdChoice), transfer, currentUser);
-        if (transferChoice != null) {
-            consoleService.printTransferDetails(transfer);
-        }
-
-
+        TransferService ts = new TransferService(API_BASE_URL, currentUser);
+        ts.transfersList();
     }
-
-    private Transfer validateTransferIdChoice(int transferIdChoice, Transfer[] transfers, AuthenticatedUser currentUser) {
-        Transfer transferChoice = null;
-        if (transferIdChoice != 0) {
-            try {
-                boolean validTransferIdChoice = false;
-                for (Transfer transfer : transfers) {
-                    if (transfer.getTransferId() == transferIdChoice) {
-                        validTransferIdChoice = true;
-                        transferChoice = transfer;
-                        break;
-                    }
-                }
-                if (!validTransferIdChoice) {
-                    throw new Exception("Invalid Transfer Id Choice");
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        return transferChoice;
-    }
-
-    private void printTransferStubDetails(AuthenticatedUser currentUser, Transfer transfer) {
-        String fromOrTo = "";
-        Long accountFrom = transfer.getAccountFrom();
-        Long accountTo = transfer.getAccountTo();
-        if (accountService.getUserId(currentUser) == currentUser.getUser().getId()) {
-            Long accountFromUserId = accountService.getUserId(currentUser);
-            Long userFromName = accountService.getUserId(currentUser);
-            fromOrTo = "From: " + userFromName;
-        } else {
-            Long accountToUserId = accountService.getUserId(currentUser);
-            Long userToName = accountService.getUserId(currentUser);
-            fromOrTo = "To: " + userToName;
-        }
-        console.printTransfers(transfer.getTransferTypeId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
-    }
-
 
     private void viewPendingRequests() {
-        Transfer[] transfers = transferService.getPendingTransfersByUserId(currentUser);
-        System.out.println("-------------------------------");
-        System.out.println("Pending Transfers");
-        System.out.println("ID          To          Amount");
-        System.out.println("-------------------------------");
-
-        for (Transfer transfer : transfers) {
-            printTransferStubDetails(currentUser, transfer);
-        }
-        // TODO
-        int transferIdChoice = console.getUserInputInteger("\nPlease enter transfer ID to approve/reject (0 to cancel)");
-        Transfer transferChoice = validateTransferIdChoice(transferIdChoice, transfers, currentUser);
-        if (transferChoice != null) {
-            approveOrReject(transferChoice, currentUser);
-        }
-
+        TransferService ts = new TransferService(API_BASE_URL, currentUser);
+        ts.transfersRequestList();
     }
-//needs to be reformatted to long
+
     private void sendBucks() {
-        Long users = accountService.getUserId(currentUser);
-        printUserOptions(currentUser, users);
-
-        int userIdChoice = console.getUserInputInteger("Enter the ID of the user you are sending to (0 to cancel)");
-        if (validateUserChoice(userIdChoice, users, currentUser)) {
-            String amountChoice = console.getUserInput("Enter amount");
-            transferService.createTransfer(currentUser);
-        }
-
+        TransferService ts = new TransferService(API_BASE_URL, currentUser);
+        ts.sendBucks();
     }
-//needs to be reformatted to long
+
     private void requestBucks() {
-        Long users = accountService.getUserId(currentUser);
-        printUserOptions(currentUser, users);
-        int userIdChoice = console.getUserInputInteger("Enter ID of user you are requesting from (0 to cancel)");
-        if (validateUserChoice(userIdChoice, users, currentUser)) {
-            String amountChoice = console.getUserInput("Enter amount");
-            transferService.createTransfer(currentUser);
-        }
-
+        TransferService ts = new TransferService(API_BASE_URL, currentUser);
+        ts.requestBucks();
     }
 
-    private void printUserOptions(AuthenticatedUser authenticatedUser, Long users) {
-
-        System.out.println("-------------------------------");
-        System.out.println("Users");
-        System.out.println("ID          Name");
-        System.out.println("-------------------------------");
-        System.out.println(users);
+    private void exitProgram() {
+        System.exit(0);
     }
 
-    private boolean validateUserChoice(int userIdChoice, Long users, AuthenticatedUser currentUser) {
-        if (userIdChoice != 0) {
-            try {
-                boolean validUserIdChoice = false;
-
-//Repaired For-Each....I think?
-
-                    if (userIdChoice == currentUser.getUser().getId()) {
-                        throw new Exception("Invalid User Choice");
-                    } else {
-                        validUserIdChoice = true;
-                        break;
-                    }
-
-                if (validUserIdChoice == false) {
-                    throw new Exception("test");
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-//resolved transfer service issue on app side -- still waiting on RestTransferService issues for confirmation
-    private void approveOrReject(Transfer pendingTransfer, AuthenticatedUser authenticatedUser) {
-        console.printApproveOrRejectOptions();
-        long choice = console.getUserInputInteger("Please choose an option");
-
-        if (choice != 0) {
-            if (choice == 1) {
-                long transferStatusId = transferService.getTransferFromTransferId(authenticatedUser, Integer.parseInt("Approved")).getTransferStatusId();
-                pendingTransfer.setTransferStatusId(transferStatusId);
-            } else if (choice == 2) {
-                long transferStatusId = transferService.getTransferFromTransferId(authenticatedUser, Integer.parseInt("Rejected")).getTransferStatusId();
-                pendingTransfer.setTransferStatusId(transferStatusId);
+    private void registerAndLogin() {
+        while(!isAuthenticated()) {
+            String choice = (String)console.getChoiceFromOptions(LOGIN_MENU_OPTIONS);
+            if (LOGIN_MENU_OPTION_LOGIN.equals(choice)) {
+                login();
+            } else if (LOGIN_MENU_OPTION_REGISTER.equals(choice)) {
+                register();
             } else {
-                System.out.println("Invalid choice.");
+                exitProgram();
             }
-            transferService.updateTransfer(currentUser, pendingTransfer);
         }
+    }
 
+    private boolean isAuthenticated() {
+        return currentUser != null;
+    }
+
+    private void register() {
+        System.out.println("Please register a new user account");
+        boolean isRegistered = false;
+        while (!isRegistered) //will keep looping until user is registered
+        {
+            UserCredentials credentials = collectUserCredentials();
+            try {
+                authenticationService.register(credentials);
+                isRegistered = true;
+                System.out.println("Registration successful. You can now login.");
+            } catch(AuthenticationServiceException e) {
+                System.out.println("REGISTRATION ERROR: "+e.getMessage());
+                System.out.println("Please attempt to register again.");
+            }
+        }
+    }
+
+    private void login() {
+        System.out.println("Please log in");
+        currentUser = null;
+        while (currentUser == null) //will keep looping until user is logged in
+        {
+            UserCredentials credentials = collectUserCredentials();
+            try {
+                currentUser = authenticationService.login(credentials);
+            } catch (AuthenticationServiceException e) {
+                System.out.println("LOGIN ERROR: "+e.getMessage());
+                System.out.println("Please attempt to login again.");
+            }
+        }
+    }
+
+    private UserCredentials collectUserCredentials() {
+        String username = console.getUserInput("Username");
+        String password = console.getUserInput("Password");
+        return new UserCredentials(username, password);
     }
 }
 

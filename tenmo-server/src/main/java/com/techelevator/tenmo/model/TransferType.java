@@ -3,12 +3,7 @@ package com.techelevator.tenmo.model;
 public class TransferType {
 
     private int transferTypeId;
-    private String transferTypeDescription;
-
-    public TransferType(int transferTypeId, String transferTypeDescription) {
-        this.transferTypeId = transferTypeId;
-        this.transferTypeDescription = transferTypeDescription;
-    }
+    private String transferTypeDesc;
 
     public int getTransferTypeId() {
         return transferTypeId;
@@ -18,12 +13,11 @@ public class TransferType {
         this.transferTypeId = transferTypeId;
     }
 
-    public String getTransferTypeDescription() {
-        return transferTypeDescription;
+    public String getTransferTypeDesc() {
+        return transferTypeDesc;
     }
 
-    public void setTransferTypeDescription(String transferTypeDescription) {
-        this.transferTypeDescription = transferTypeDescription;
+    public void setTransferTypeDesc(String transferTypeDesc) {
+        this.transferTypeDesc = transferTypeDesc;
     }
-
 }

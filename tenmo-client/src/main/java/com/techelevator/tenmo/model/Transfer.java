@@ -2,50 +2,54 @@ package com.techelevator.tenmo.model;
 import java.math.BigDecimal;
 
 public class Transfer {
-    private Long transferId;
-    private Long transferTypeId;
-    private Long transferStatusId;
-    private Long accountFrom;
-    private Long accountTo;
+    private int transferId;
+    private int transferTypeId;
+    private int transferStatusId;
+    private int accountFrom;
+    private int accountTo;
     private BigDecimal amount;
+    private String transferType;
+    private String transferStatus;
+    private String userFrom;
+    private String userTo;
 
-    public Long getTransferId() {
+    public int getTransferId() {
         return transferId;
     }
 
-    public void setTransferId(Long transferId) {
+    public void setTransferId(int transferId) {
         this.transferId = transferId;
     }
 
-    public Long getTransferTypeId() {
+    public int getTransferTypeId() {
         return transferTypeId;
     }
 
-    public void setTransferTypeId(Long transferTypeId) {
+    public void setTransferTypeId(int transferTypeId) {
         this.transferTypeId = transferTypeId;
     }
 
-    public Long getTransferStatusId() {
+    public int getTransferStatusId() {
         return transferStatusId;
     }
 
-    public void setTransferStatusId(Long transferStatusId) {
+    public void setTransferStatusId(int transferStatusId) {
         this.transferStatusId = transferStatusId;
     }
 
-    public Long getAccountFrom() {
+    public int getAccountFrom() {
         return accountFrom;
     }
 
-    public void setAccountFrom(Long accountFrom) {
+    public void setAccountFrom(int accountFrom) {
         this.accountFrom = accountFrom;
     }
 
-    public Long getAccountTo() {
+    public int getAccountTo() {
         return accountTo;
     }
 
-    public void setAccountTo(Long accountTo) {
+    public void setAccountTo(int accountTo) {
         this.accountTo = accountTo;
     }
 
@@ -55,5 +59,37 @@ public class Transfer {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
+
+    public String getTransferStatus() {
+        return transferStatus;
+    }
+
+    public void setTransferStatus(String transferStatus) {
+        this.transferStatus = transferStatus;
+    }
+
+    public String getUserFrom() {
+        return userFrom;
+    }
+
+    public void setUserFrom(String userFrom) {
+        this.userFrom = userFrom;
+    }
+
+    public String getUserTo() {
+        return userTo;
+    }
+
+    public void setUserTo(String userTo) {
+        this.userTo = userTo;
     }
 }
