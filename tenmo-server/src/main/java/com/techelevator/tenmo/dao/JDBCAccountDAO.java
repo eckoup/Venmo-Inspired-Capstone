@@ -23,7 +23,7 @@ public class JDBCAccountDAO implements AccountDAO {
     }
 
 
-// SQL WORKS HERE
+    // SQL WORKS HERE
     @Override
     public BigDecimal getBalance(int userId) {
         String sqlString = "SELECT balance FROM account WHERE user_id = ?";

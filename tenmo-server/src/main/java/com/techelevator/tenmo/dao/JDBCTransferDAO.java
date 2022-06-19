@@ -57,13 +57,13 @@ public class JDBCTransferDAO implements TransferDAO {
         }
         if (amount.compareTo(accountDAO.getBalance(userFrom)) == -1 && amount.compareTo(new BigDecimal(0)) == 1) {
             String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                    "VALUES (2, 2, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?)";
             jdbcTemplate.update(sql, userFrom, userTo, amount);
             accountDAO.addToBalance(amount, userTo);
             accountDAO.subtractFromBalance(amount, userFrom);
             return "Transfer complete";
         } else {
-            return "Transfer failed due to a lack of funds, amount was $0 o less, or there was no valid user. ";
+            return "Transfer failed due to a lack of funds, amount was $0 or less, or there was no valid user. ";
         }
     }
 

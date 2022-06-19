@@ -23,7 +23,15 @@ public class App {
     private static final String MAIN_MENU_OPTION_REQUEST_BUCKS = "Request TE bucks";
     private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
     private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
-    private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
+    private static final String[] MAIN_MENU_OPTIONS = {
+            MAIN_MENU_OPTION_VIEW_BALANCE,
+            MAIN_MENU_OPTION_SEND_BUCKS,
+            MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS,
+            MAIN_MENU_OPTION_REQUEST_BUCKS,
+            MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS,
+            MAIN_MENU_OPTION_LOGIN,
+            MENU_OPTION_EXIT
+    };
 
     private AuthenticatedUser currentUser;
     private ConsoleService console;

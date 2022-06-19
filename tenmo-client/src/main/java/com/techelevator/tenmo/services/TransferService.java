@@ -46,7 +46,7 @@ public class TransferService {
                 System.out.println(i.getTransferId() +"\t\t" + fromOrTo + name + "\t\t$" + i.getAmount());
             }
             System.out.print("-------------------------------------------\r\n" +
-                    "Please enter transfer ID to view details (0 to cancel): ");
+                    "Please enter transfer ID to view details (Type 0 to cancel): ");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
             if (Integer.parseInt(input) != 0) {
@@ -71,7 +71,7 @@ public class TransferService {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Something went wrong... Opps! We have all your money now!");
+            System.out.println("Something went wrong...");
         }
         return output;
     }
@@ -79,9 +79,9 @@ public class TransferService {
     public void sendBucks() {
         User[] users = null;
         Transfer transfer = new Transfer();
-        try {
+//        try {
             Scanner scanner = new Scanner(System.in);
-            users = restTemplate.exchange(BASE_URL + "listusers", HttpMethod.GET, makeAuthEntity(), User[].class).getBody();
+            users = restTemplate.exchange(BASE_URL + "listusers/", HttpMethod.GET, makeAuthEntity(), User[].class).getBody();
             System.out.println("-------------------------------------------\r\n" +
                     "Users\r\n" +
                     "ID\t\tName\r\n" +
@@ -102,12 +102,13 @@ public class TransferService {
                 } catch (NumberFormatException e) {
                     System.out.println("Error when entering amount");
                 }
-                String output = restTemplate.exchange(BASE_URL + "transfer", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
+                //Error at Line 106, causing Try/Catch at line 110 to be thrown.
+                String output = restTemplate.exchange(BASE_URL + "transfer/", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
                 System.out.println(output);
             }
-        } catch (Exception e) {
-            System.out.println("Bad input.");
-        }
+//        } catch (Exception e) {
+//            System.out.println("Code error");
+//        }
     }
 
     public void requestBucks() {
@@ -115,7 +116,7 @@ public class TransferService {
         Transfer transfer = new Transfer();
         try {
             Scanner scanner = new Scanner(System.in);
-            users = restTemplate.exchange(BASE_URL + "listusers", HttpMethod.GET, makeAuthEntity(), User[].class).getBody();
+            users = restTemplate.exchange(BASE_URL + "listusers/", HttpMethod.GET, makeAuthEntity(), User[].class).getBody();
             System.out.println("-------------------------------------------\r\n" +
                     "Users\r\n" +
                     "ID\t\tName\r\n" +
@@ -136,7 +137,7 @@ public class TransferService {
                 } catch (NumberFormatException e) {
                     System.out.println("Error when entering amount");
                 }
-                String output = restTemplate.exchange(BASE_URL + "request", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
+                String output = restTemplate.exchange(BASE_URL + "request/", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
                 System.out.println(output);
             }
         } catch (Exception e) {
@@ -201,7 +202,7 @@ public class TransferService {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Something went wrong... Opps! We have all your money now!");
+            System.out.println("Something went wrong...");
         }
         return output;
     }
