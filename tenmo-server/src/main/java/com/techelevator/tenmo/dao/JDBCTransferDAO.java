@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -49,18 +50,35 @@ public class JDBCTransferDAO implements TransferDAO {
         return transfer;
     }
 
-    //SQL NEEDS DEBUGGING
+    //SQL WORKKKSSSSSSS
     @Override
     public String sendTransfer(int userFrom, int userTo, BigDecimal amount) {
+        SqlRowSet results = null;
+        Transfer transferHistory = null;
+        List<Transfer> output = new ArrayList<>();
+
         if (userFrom == userTo) {
             return " Why would you send yourself money? Just keep it! ";
         }
-        if (amount.compareTo(accountDAO.getBalance(userFrom)) == -1 && amount.compareTo(new BigDecimal(0)) == 1) {
-            String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                    "VALUES (?, ?, ?, ?, ?)";
-            jdbcTemplate.update(sql, userFrom, userTo, amount);
-            accountDAO.addToBalance(amount, userTo);
-            accountDAO.subtractFromBalance(amount, userFrom);
+        if ((amount.compareTo(accountDAO.getBalance(userFrom)) == -1) && (amount.compareTo(new BigDecimal(0)) == 1)) {
+            String sql = "BEGIN;\n" +
+                    "update account set balance = balance - ? where user_id = ?;\n" +
+                    "update account set balance = balance + ? where user_id = ?;\n" +
+                    "COMMIT;";
+            jdbcTemplate.update(sql, amount, userFrom, amount, userTo);
+
+//            Transfer completedTransfer = null;
+//            try {
+//                results = jdbcTemplate.queryForRowSet(sql, userFrom, amount, userTo, amount);
+//                if (results.next()) {
+//                    transferHistory = results.getBigDecimal("balance");
+//                }
+//            } catch (DataAccessException e) {
+//                System.out.println("Error accessing data");
+//            }
+//            return balance;
+//            accountDAO.addToBalance(amount, userTo);
+//            accountDAO.subtractFromBalance(amount, userFrom);
             return "Transfer complete";
         } else {
             return "Transfer failed due to a lack of funds, amount was $0 or less, or there was no valid user. ";

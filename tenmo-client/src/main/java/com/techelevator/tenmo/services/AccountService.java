@@ -1,9 +1,12 @@
 package com.techelevator.tenmo.services;
 
 import java.math.BigDecimal;
+
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import com.techelevator.tenmo.model.AuthenticatedUser;
@@ -32,6 +35,22 @@ public class AccountService {
             System.out.println("Error getting balance");
         }
         return balance;
+    }
+
+    public boolean createTransfer(Transfer transfer){
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(currentUser.getToken());
+            HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+            transfer = restTemplate.postForObject(BASE_URL + "transfer", entity, Transfer.class);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return false;
+
+        } return true;
+
     }
 
 

@@ -77,6 +77,9 @@ public class TransferService {
     }
 
     public void sendBucks() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(currentUser.getToken());
         User[] users = null;
         Transfer transfer = new Transfer();
 //        try {
@@ -112,6 +115,9 @@ public class TransferService {
     }
 
     public void requestBucks() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(currentUser.getToken());
         User[] users = null;
         Transfer transfer = new Transfer();
         try {
@@ -227,6 +233,22 @@ public class TransferService {
         HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
         return entity;
     }
+
+//    public boolean createTransfer(Transfer transfer){
+//        try {
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//            headers.setBearerAuth(currentUser.getToken());
+//            HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+//            transfer = restTemplate.postForObject(BASE_URL + "transfer", entity, Transfer.class);
+//        }
+//        catch (Exception e){
+//            System.out.println(e.getMessage());
+//            return false;
+//
+//        } return true;
+//
+//    }
 
     private HttpEntity makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
