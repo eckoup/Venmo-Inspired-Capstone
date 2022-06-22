@@ -61,25 +61,16 @@ public class JDBCTransferDAO implements TransferDAO {
             return " Why would you send yourself money? Just keep it! ";
         }
         if ((amount.compareTo(accountDAO.getBalance(userFrom)) == -1) && (amount.compareTo(new BigDecimal(0)) == 1)) {
-            String sql = "BEGIN;\n" +
-                    "update account set balance = balance - ? where user_id = ?;\n" +
-                    "update account set balance = balance + ? where user_id = ?;\n" +
-                    "COMMIT;";
+            String sql =    "BEGIN;\n" +
+                            "update account set balance = balance - ? where user_id = ?;\n" +
+                            "update account set balance = balance + ? where user_id = ?;\n" +
+                            "COMMIT;";
             jdbcTemplate.update(sql, amount, userFrom, amount, userTo);
+            BigDecimal userFromNewBalance = accountDAO.getBalance(userFrom);
+            BigDecimal userToNewBalance = accountDAO.getBalance(userTo);
+            System.out.println("-----------------------------------------------------------");
+            return "Balance for " + userFrom + " is " + userFromNewBalance + ", and balance for " + userTo + " is " + userToNewBalance;
 
-//            Transfer completedTransfer = null;
-//            try {
-//                results = jdbcTemplate.queryForRowSet(sql, userFrom, amount, userTo, amount);
-//                if (results.next()) {
-//                    transferHistory = results.getBigDecimal("balance");
-//                }
-//            } catch (DataAccessException e) {
-//                System.out.println("Error accessing data");
-//            }
-//            return balance;
-//            accountDAO.addToBalance(amount, userTo);
-//            accountDAO.subtractFromBalance(amount, userFrom);
-            return "Transfer complete";
         } else {
             return "Transfer failed due to a lack of funds, amount was $0 or less, or there was no valid user. ";
         }
