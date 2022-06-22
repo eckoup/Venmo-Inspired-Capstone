@@ -49,7 +49,7 @@ public class TransferController {
         return output;
     }
 
-//Updated misspelled method by adding a "q"
+
     @RequestMapping(path = "transfer/status/{statusId}", method = RequestMethod.PUT)
     public String updateRequest(@RequestBody Transfer transfer, @PathVariable int statusId) {
         String output = transfersDAO.updateTransferRequest(transfer, statusId);

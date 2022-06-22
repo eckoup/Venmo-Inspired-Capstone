@@ -24,7 +24,7 @@ public class UserSqlDAO implements UserDAO{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    //This one works
+
     @Override
     public int findIdByUsername(String username) {
         String sql = "SELECT user_id FROM tenmo_user WHERE username ILIKE ?;";
@@ -36,7 +36,7 @@ public class UserSqlDAO implements UserDAO{
         }
     }
 
-    //This one works
+
     @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
@@ -49,7 +49,7 @@ public class UserSqlDAO implements UserDAO{
         return users;
     }
 
-    //This one works
+
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE username ILIKE ?;";
@@ -60,7 +60,7 @@ public class UserSqlDAO implements UserDAO{
         throw new UsernameNotFoundException("User " + username + " was not found.");
     }
 
-    //This one works
+
     @Override
     public boolean create(String username, String password) {
         // create user
@@ -73,7 +73,7 @@ public class UserSqlDAO implements UserDAO{
             return false;
         }
 
-        // create account
+
         sql = "INSERT INTO account (user_id, balance) values(?, ?)";
         try {
             jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);

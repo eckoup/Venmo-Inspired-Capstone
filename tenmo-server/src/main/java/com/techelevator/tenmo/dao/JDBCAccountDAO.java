@@ -23,7 +23,7 @@ public class JDBCAccountDAO implements AccountDAO {
     }
 
 
-    // SQL WORKS HERE
+
     @Override
     public BigDecimal getBalance(int userId) {
         String sqlString = "SELECT balance FROM account WHERE user_id = ?";
@@ -41,7 +41,7 @@ public class JDBCAccountDAO implements AccountDAO {
     }
 
 
-    // SQL NEEDS DEBUGGING
+
     @Override
     public BigDecimal addToBalance(BigDecimal amountToAdd, int id) {
         Account account = findAccountById(id);
@@ -57,7 +57,6 @@ public class JDBCAccountDAO implements AccountDAO {
     }
 
 
-    // SQL NEEDS DEBUGGING
     @Override
     public BigDecimal subtractFromBalance(BigDecimal amountToSubtract, int id) {
         String sqlString = "UPDATE account SET balance = ? WHERE user_id = ?";
@@ -72,7 +71,6 @@ public class JDBCAccountDAO implements AccountDAO {
     }
 
 
-    //SQL WORKS HERE
     @Override
     public Account findUserById(int userId) {
         String sqlString = "SELECT * FROM account WHERE user_id = ?";
@@ -87,7 +85,6 @@ public class JDBCAccountDAO implements AccountDAO {
     }
 
 
-    //SQL WORKS HERE
     @Override
     public Account findAccountById(int id) {
         Account account = null;
@@ -98,7 +95,6 @@ public class JDBCAccountDAO implements AccountDAO {
         }
         return account;
     }
-
 
 
     private Account mapRowToAccount(SqlRowSet result) {
